@@ -1,5 +1,6 @@
 ﻿#include <iostream>
-#include <fstream>
+
+#include "ShaderManager.h"
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -9,12 +10,9 @@ void init();
 void update();
 void draw();
 
-//Helper
-void checkShaderErrors(GLuint shaderId);
-
 //Variables
 GLFWwindow* window;
-const int monitor = 0;
+const int monitor = 1;
 
 //Ground
 float groundVertices[] = {
@@ -23,9 +21,6 @@ float groundVertices[] = {
 		0.0f, 0.5f, 0.0f
 };
 unsigned int groundVBO, groundVAO;
-
-//Shaders
-unsigned int shaderProgram;
 
 //Main
 int main() {
@@ -38,17 +33,17 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#define FULLSCREEN 0
+#define FULLSCREEN 1
 #if FULLSCREEN
-		int windows;
-		GLFWmonitor** monitors = glfwGetMonitors(&windows);
+	int windows;
+	GLFWmonitor** monitors = glfwGetMonitors(&windows);
 
-		window = glfwCreateWindow(1920, 1080, "Grass", monitors[monitor], nullptr);
-		glfwSwapInterval(1);
+	window = glfwCreateWindow(1920, 1080, "Grass", monitors[monitor], nullptr);
+	glfwSwapInterval(1);
 #else
-		window = glfwCreateWindow(1920, 1080, "Grass", nullptr, nullptr);
+	window = glfwCreateWindow(1920, 1080, "Grass", nullptr, nullptr);
 #endif
-		
+
 	if (window == nullptr) {
 		std::cout << "Failed to open GLFW window" << std::endl;
 		return -1;
@@ -72,7 +67,7 @@ int main() {
 
 	glDeleteVertexArrays(1, &groundVAO);
 	glDeleteBuffers(1, &groundVBO);
-	glDeleteProgram(shaderProgram);
+	ShaderManager::shaderDestroy();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -80,34 +75,7 @@ int main() {
 }
 
 void init() {
-	//Shaders	
-	std::ifstream vertexShaderFile("shader/simple.vs");
-	std::string vertexShaderData((std::istreambuf_iterator<char>(vertexShaderFile)), std::istreambuf_iterator<char>());
-	const char* constVertexShaderData = vertexShaderData.c_str();
-
-	std::ifstream fragShaderFile("shader/simple.fs");
-	std::cout << fragShaderFile.good() << std::endl;
-	std::string fragShaderData((std::istreambuf_iterator<char>(fragShaderFile)), std::istreambuf_iterator<char>());
-	const char* constFragShaderData = fragShaderData.c_str();
-
-	unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &constVertexShaderData, nullptr);
-	glCompileShader(vertexShader);
-	checkShaderErrors(vertexShader);
-
-	unsigned int fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-	glShaderSource(fragmentShader, 1, &constFragShaderData, nullptr);
-	glCompileShader(fragmentShader);
-	checkShaderErrors(fragmentShader);
-
-	//Program
-	shaderProgram = glCreateProgram();
-	glAttachShader(shaderProgram, vertexShader);
-	glAttachShader(shaderProgram, fragmentShader);
-
-	glLinkProgram(shaderProgram);
-	glDeleteShader(vertexShader);
-	glDeleteShader(fragmentShader);
+	ShaderManager::shaderInit();
 
 	//Ground buffers
 	glGenVertexArrays(1, &groundVAO);
@@ -135,24 +103,8 @@ void draw() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glUseProgram(shaderProgram);
 	glBindVertexArray(groundVAO);
 	glDrawArrays(GL_TRIANGLES, 0, 3);
 
 	glfwSwapBuffers(window);
-}
-
-//Helper
-void checkShaderErrors(GLuint shaderId) {
-	GLint status;
-	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
-	if (status == GL_FALSE) {
-		int length, charsWritten;
-		glGetShaderiv(shaderId, GL_INFO_LOG_LENGTH, &length);
-		char* infoLog = new char[length + 1];
-		memset(infoLog, 0, length + 1);
-		glGetShaderInfoLog(shaderId, length, &charsWritten, infoLog);
-		std::cout << "Error compiling shader:\n" << infoLog << std::endl;
-		delete[] infoLog;
-	}
 }
