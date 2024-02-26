@@ -1,6 +1,7 @@
-﻿#include <iostream>
+﻿#include "ShaderManager.h"
+#include "Ground.h"
 
-#include "ShaderManager.h"
+#include <iostream>
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
@@ -14,14 +15,6 @@ void draw();
 GLFWwindow* window;
 const int monitor = 1;
 
-//Ground
-float groundVertices[] = {
-		-0.5f, -0.5f, 0.0f,
-		0.5f, -0.5f, 0.0f,
-		0.0f, 0.5f, 0.0f
-};
-unsigned int groundVBO, groundVAO;
-
 //Main
 int main() {
 	if (!glfwInit()) {
@@ -33,7 +26,7 @@ int main() {
 	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-#define FULLSCREEN 1
+#define FULLSCREEN 0
 #if FULLSCREEN
 	int windows;
 	GLFWmonitor** monitors = glfwGetMonitors(&windows);
@@ -41,7 +34,7 @@ int main() {
 	window = glfwCreateWindow(1920, 1080, "Grass", monitors[monitor], nullptr);
 	glfwSwapInterval(1);
 #else
-	window = glfwCreateWindow(1920, 1080, "Grass", nullptr, nullptr);
+	window = glfwCreateWindow(1280, 720, "Grass", nullptr, nullptr);
 #endif
 
 	if (window == nullptr) {
@@ -65,8 +58,7 @@ int main() {
 		glfwPollEvents();
 	}
 
-	glDeleteVertexArrays(1, &groundVAO);
-	glDeleteBuffers(1, &groundVBO);
+	Ground::groundDestroy();
 	ShaderManager::shaderDestroy();
 
 	glfwDestroyWindow(window);
@@ -76,18 +68,7 @@ int main() {
 
 void init() {
 	ShaderManager::shaderInit();
-
-	//Ground buffers
-	glGenVertexArrays(1, &groundVAO);
-	glGenBuffers(1, &groundVBO);
-	glBindVertexArray(groundVAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(groundVertices), groundVertices, GL_STATIC_DRAW);
-
-	//Binding shader attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) nullptr);
-	glEnableVertexAttribArray(0);
+	Ground::groundInit();
 }
 
 void update() {
@@ -103,8 +84,7 @@ void draw() {
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	glBindVertexArray(groundVAO);
-	glDrawArrays(GL_TRIANGLES, 0, 3);
+	Ground::spawn();
 
 	glfwSwapBuffers(window);
 }

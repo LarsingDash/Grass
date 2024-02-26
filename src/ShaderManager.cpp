@@ -1,5 +1,7 @@
 ﻿#include "ShaderManager.h"
-unsigned int ShaderManager::shaderProgram;
+
+#include <fstream>
+#include <iostream>
 
 void ShaderManager::shaderInit() {
 	//Shaders	

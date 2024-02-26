@@ -3,17 +3,17 @@ project(Grass VERSION 0.1.0)
 
 set(GLFW_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/libs/glfw/include)
 set(GLFW_LIB ${PROJECT_SOURCE_DIR}/libs/glfw/lib/x64/glfw3.lib)
-
 include_directories(${GLFW_INCLUDE_DIR})
 
-add_executable(
-        Grass src/Grass.cpp
-        src/ShaderManager.h
+add_executable(Grass
+        src/Grass.cpp
         src/ShaderManager.cpp
+        src/Ground.cpp
 )
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glm)
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glad)
 
+target_link_libraries(Grass PRIVATE glm)
 target_link_libraries(Grass PRIVATE ${GLFW_LIB})
 target_link_libraries(Grass PRIVATE glad)
