@@ -7,8 +7,10 @@ include_directories(${GLFW_INCLUDE_DIR})
 
 add_executable(Grass
         src/Grass.cpp
-        src/ShaderManager.cpp
+        src/Shader.cpp
         src/Ground.cpp
+        src/Camera.cpp
+        src/Camera.h
 )
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glm)

@@ -1,9 +1,13 @@
-﻿#include "ShaderManager.h"
+﻿#include "Shader.h"
 
 #include <fstream>
 #include <iostream>
 
-void ShaderManager::shaderInit() {
+namespace Shader {
+	unsigned int shaderProgram = 0;
+}
+
+void Shader::shaderInit() {
 	//Shaders	
 	std::ifstream vertexShaderFile("shader/simple.vert");
 	std::string vertexShaderData((std::istreambuf_iterator<char>(vertexShaderFile)),
@@ -36,12 +40,12 @@ void ShaderManager::shaderInit() {
 	glUseProgram(shaderProgram);
 }
 
-void ShaderManager::shaderDestroy() {
+void Shader::shaderDestroy() {
 	glDeleteProgram(shaderProgram);
 }
 
 //Helper
-void ShaderManager::checkShaderErrors(GLuint shaderId) {
+void Shader::checkShaderErrors(GLuint shaderId) {
 	GLint status;
 	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE) {

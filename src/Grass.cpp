@@ -1,5 +1,6 @@
-﻿#include "ShaderManager.h"
+﻿#include "Shader.h"
 #include "Ground.h"
+#include "Camera.h"
 
 #include <iostream>
 
@@ -59,7 +60,7 @@ int main() {
 	}
 
 	Ground::groundDestroy();
-	ShaderManager::shaderDestroy();
+	Shader::shaderDestroy();
 
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -67,13 +68,17 @@ int main() {
 }
 
 void init() {
-	ShaderManager::shaderInit();
+	Shader::shaderInit();
 	Ground::groundInit();
+	
+	Camera::updateCamera();
 }
 
 void update() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+	
+//	Camera::updateCamera();
 }
 
 void draw() {

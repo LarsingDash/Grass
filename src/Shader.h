@@ -3,12 +3,12 @@
 
 #include <glad/glad.h>
 
-namespace ShaderManager {
+namespace Shader {
 	void shaderInit();
 	void shaderDestroy();
 	void checkShaderErrors(GLuint shaderId);
 
-	static unsigned int shaderProgram;
+	extern unsigned int shaderProgram;
 };
 
 #endif //GRASS_SHADER_MANAGER_H
