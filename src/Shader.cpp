@@ -9,12 +9,12 @@ namespace Shader {
 
 void Shader::shaderInit() {
 	//Shaders	
-	std::ifstream vertexShaderFile("shader/simple.vert");
+	std::ifstream vertexShaderFile("shader/ground.vert");
 	std::string vertexShaderData((std::istreambuf_iterator<char>(vertexShaderFile)),
 								 std::istreambuf_iterator<char>());
 	const char* constVertexShaderData = vertexShaderData.c_str();
 
-	std::ifstream fragShaderFile("shader/simple.frag");
+	std::ifstream fragShaderFile("shader/ground.frag");
 	std::string fragShaderData((std::istreambuf_iterator<char>(fragShaderFile)), std::istreambuf_iterator<char>());
 	const char* constFragShaderData = fragShaderData.c_str();
 

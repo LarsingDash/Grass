@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-constexpr int size = 3;
+constexpr int size = 25;
 glm::vec3 groundVertices[size + 1][size + 1];
 GLuint groundIndices[size * size * 6];
 
@@ -58,7 +58,7 @@ void Ground::spawn() {
 
 void Ground::draw() {
 	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(10.f);
+	glLineWidth(1.f);
 	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, size * size * 6, GL_UNSIGNED_INT, nullptr);
 }

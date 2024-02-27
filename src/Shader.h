@@ -9,6 +9,6 @@ namespace Shader {
 	void checkShaderErrors(GLuint shaderId);
 
 	extern unsigned int shaderProgram;
-};
+}
 
 #endif //GRASS_SHADER_MANAGER_H

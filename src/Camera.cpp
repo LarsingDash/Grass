@@ -6,7 +6,6 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <iostream>
 
 void Camera::updateCamera() {
 	//View
@@ -17,13 +16,6 @@ void Camera::updateCamera() {
 	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 
 	view = glm::lookAt(eye, center, up);
-
-//	int i,j;
-//	for(i=0; i<4; ++i) {
-//		for(j=0; j<4; ++j)
-//			printf("%f, ", view[i][j]);
-//		printf("\n");
-//	}
 
 	GLint viewLocation = glGetUniformLocation(Shader::shaderProgram, "view");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
