@@ -68,17 +68,17 @@ int main() {
 }
 
 void init() {
+	Camera::cameraInit(window);
 	Shader::shaderInit();
 	Ground::groundInit();
-	
-	Camera::updateCamera();
 }
 
 void update() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 	
-//	Camera::updateCamera();
+	Camera::updateCamera();
+	Camera::updateUniforms();
 }
 
 void draw() {

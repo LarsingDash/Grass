@@ -1,22 +1,53 @@
-﻿#include "Camera.h"
-#include "Shader.h"
+﻿#include "Shader.h"
+#include "Camera.h"
 
-#include <glad/glad.h>
-
-#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
+glm::vec3 eye = glm::vec3(0.0f, 0.0f, 1.0f);
+glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
+
+constexpr float movementSpeed = 0.1f;
+const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 forward = glm::normalize(center - eye);
+glm::vec3 right = glm::normalize(glm::cross(forward, up));
+
+glm::vec3 rotateAroundAxis(const glm::vec3& pointToRotate, const glm::vec3& axis, float angle) {
+	glm::mat4 rotationMatrix = glm::rotate(glm::mat4(1.0f), angle, axis);
+	return (rotationMatrix * glm::vec4(pointToRotate, 1.0f));
+}
+
+void Camera::cameraInit(GLFWwindow* window) {
+	windowC = window;
+}
+
 void Camera::updateCamera() {
+	if (glfwGetKey(windowC, GLFW_KEY_W) == GLFW_PRESS) {
+		eye += forward * movementSpeed;
+		center += forward * movementSpeed;
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_S) == GLFW_PRESS) {
+		eye -= forward * movementSpeed;
+		center -= forward * movementSpeed;
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_A) == GLFW_PRESS) {
+		eye -= right * movementSpeed;
+		center -= right * movementSpeed;
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_D) == GLFW_PRESS) {
+		eye += right * movementSpeed;
+		center += right * movementSpeed;
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_LEFT) == GLFW_PRESS) {
+		center = rotateAroundAxis(center - eye, up, glm::radians(2.0f)) + eye;
+		forward = glm::normalize(center - eye);
+		right = glm::normalize(glm::cross(forward, up));
+	}
+}
+
+void Camera::updateUniforms() {
 	//View
-	glm::mat4 view = glm::mat4(1.0f);
-
-	glm::vec3 eye = glm::vec3(2.0f, 0.0f, 3.0f);
-	glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
-	glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
-
-	view = glm::lookAt(eye, center, up);
-
+	glm::mat4 view = glm::lookAt(eye, center, up);
 	GLint viewLocation = glGetUniformLocation(Shader::shaderProgram, "view");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
