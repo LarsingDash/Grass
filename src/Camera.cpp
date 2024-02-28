@@ -8,7 +8,7 @@ glm::vec3 eye = glm::vec3(0.0f, 0.0f, 1.0f);
 glm::vec3 center = glm::vec3(0.0f, 0.0f, 0.0f);
 
 constexpr float movementSpeed = 0.1f;
-const glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
+glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 forward = glm::normalize(center - eye);
 glm::vec3 right = glm::normalize(glm::cross(forward, up));
 
@@ -22,6 +22,7 @@ void Camera::cameraInit(GLFWwindow* window) {
 }
 
 void Camera::updateCamera() {
+	//Movement
 	if (glfwGetKey(windowC, GLFW_KEY_W) == GLFW_PRESS) {
 		eye += forward * movementSpeed;
 		center += forward * movementSpeed;
@@ -38,10 +39,35 @@ void Camera::updateCamera() {
 		eye += right * movementSpeed;
 		center += right * movementSpeed;
 	}
+
+	//Vertical
+	if (glfwGetKey(windowC, GLFW_KEY_SPACE) == GLFW_PRESS) {
+		eye += up * movementSpeed;
+		center += up * movementSpeed;
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
+		eye -= up * movementSpeed;
+		center -= up * movementSpeed;
+	}
+
+	//Rotation
 	if (glfwGetKey(windowC, GLFW_KEY_LEFT) == GLFW_PRESS) {
 		center = rotateAroundAxis(center - eye, up, glm::radians(2.0f)) + eye;
 		forward = glm::normalize(center - eye);
 		right = glm::normalize(glm::cross(forward, up));
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+		center = rotateAroundAxis(center - eye, up, glm::radians(-2.0f)) + eye;
+		forward = glm::normalize(center - eye);
+		right = glm::normalize(glm::cross(forward, up));
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_UP) == GLFW_PRESS) {
+		center = rotateAroundAxis(center - eye, right, glm::radians(2.0f)) + eye;
+//		forward = glm::normalize(center - eye);
+	}
+	if (glfwGetKey(windowC, GLFW_KEY_DOWN) == GLFW_PRESS) {
+		center = rotateAroundAxis(center - eye, right, glm::radians(-2.0f)) + eye;
+//		forward = glm::normalize(center - eye);
 	}
 }
 
