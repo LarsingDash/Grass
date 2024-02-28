@@ -70,7 +70,7 @@ int main() {
 void init() {
 	Camera::cameraInit(window);
 	Shader::shaderInit();
-	Ground::groundInit();
+	Ground::groundInit(window);
 }
 
 void update() {

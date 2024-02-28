@@ -1,11 +1,13 @@
 ﻿#ifndef GRASS_GROUND_H
 #define GRASS_GROUND_H
 
+#include "GLFW/glfw3.h"
+
 #include <glm/vec3.hpp>
 #include <vector>
 
 namespace Ground {
-	void groundInit();
+	void groundInit(GLFWwindow* window);
 	void groundDestroy();
 	void draw();
 	void spawn();

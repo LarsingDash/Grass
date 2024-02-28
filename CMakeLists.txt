@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0.0)
 project(Grass VERSION 0.1.0)
+set(CMAKE_CXX_STANDARD 17)
 
 set(GLFW_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/libs/glfw/include)
 set(GLFW_LIB ${PROJECT_SOURCE_DIR}/libs/glfw/lib/x64/glfw3.lib)
@@ -11,6 +12,7 @@ add_executable(Grass
         src/Ground.cpp
         src/Camera.cpp
         src/Camera.h
+        src/PerlinNoise.hpp
 )
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glm)

@@ -1,12 +1,22 @@
-﻿#include "Ground.h"
+﻿#include <glad/glad.h>
 
-#include <glad/glad.h>
+#include "PerlinNoise.hpp"
+#include "Ground.h"
+
+#include <glm/glm.hpp>
+#include <iostream>
 
 constexpr int size = 25;
 glm::vec3 groundVertices[size + 1][size + 1];
 GLuint groundIndices[size * size * 6];
 
-void Ground::groundInit() {
+siv::PerlinNoise::seed_type seed = 16; //3,5,16,47
+siv::PerlinNoise perlin{seed};
+
+GLFWwindow* gWindow;
+
+void Ground::groundInit(GLFWwindow* window) {
+	gWindow = window;
 	Ground::spawn();
 
 	//Ground buffers
@@ -36,10 +46,13 @@ void Ground::spawn() {
 	//Ground Vertices
 	for (int x = 0; x <= size; x++) {
 		for (int y = 0; y <= size; y++) {
-			groundVertices[x][y] = glm::vec3((float(x) / float(size)) * 2 - 1, (float(y) / float(size)) * 2 - 1, 0);
+			groundVertices[x][y] = glm::vec3(
+					(float(x) / float(size)) * 2 - 1,
+					perlin.octave2D_01(float(x) / 20.0, float(y) / 20.0, 1),
+					(float(y) / float(size)) * 2 - 1);
 		}
 	}
-	
+
 	//GroundIndices
 	int i = 0;
 	for (int sizeX = 0; sizeX < size; sizeX++) {
@@ -56,9 +69,21 @@ void Ground::spawn() {
 	}
 }
 
+bool lastDown = false;
+
 void Ground::draw() {
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-	glLineWidth(1.f);
+	//Next seed
+	if (glfwGetKey(gWindow, GLFW_KEY_E) == GLFW_PRESS) {
+		if (!lastDown) {
+			lastDown = true;
+			perlin.reseed(++seed);
+			groundInit(gWindow);
+		}
+	} else lastDown = false;
+
+	//Drawing
+//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//	glLineWidth(1.f);
 	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, size * size * 6, GL_UNSIGNED_INT, nullptr);
 }
