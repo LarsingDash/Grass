@@ -54,7 +54,7 @@ void Ground::spawn() {
 
 			gd.groundVertices[x][y] = glm::vec3(
 					(fx / fSize) * 2 - 1,
-					perlin.octave2D_01(fx / 20.0, fy / 20.0, 1),
+					perlin.octave2D_01(fx / fSize, fy / fSize, 1),
 //					perlin.octave2D_01(fx / 2.0, fy / 2.0, 1),
 //					0,
 					(fy / fSize) * 2 - 1);
@@ -66,19 +66,22 @@ void Ground::spawn() {
 		for (int y = 0; y <= size; y++) {
 			glm::vec3 currPos = gd.groundVertices[x][y];
 
-			if (x > 0 && x < size && y > 0 && y < size) {
-				glm::vec3 prevXPos = gd.groundVertices[x - 1][y] - currPos;
-				glm::vec3 nextXPos = gd.groundVertices[x + 1][y] - currPos;
-				glm::vec3 normalX(nextXPos - prevXPos);
+			glm::vec3 prevXPos(0.0f);
+			glm::vec3 nextXPos(0.0f);
+			glm::vec3 prevYPos(0.0f);
+			glm::vec3 nextYPos(0.0f);
 
-				glm::vec3 prevYPos = gd.groundVertices[x][y - 1] - currPos;
-				glm::vec3 nextYPos = gd.groundVertices[x][y + 1] - currPos;
-				glm::vec3 normalY(nextYPos - prevYPos);
+			if (x > 0) prevXPos = gd.groundVertices[x - 1][y] - currPos;
+			if (x < size) nextXPos = gd.groundVertices[x + 1][y] - currPos;
+			if (y > 0) prevYPos = gd.groundVertices[x][y - 1] - currPos;
+			if (y < size) nextYPos = gd.groundVertices[x][y + 1] - currPos;
 
-				gd.groundNormals[x][y] = glm::normalize(
-						glm::cross(normalX, normalY)
-				) * glm::vec3(1, -1, 1);
-			}
+			glm::vec3 normalX(nextXPos - prevXPos);
+			glm::vec3 normalY(nextYPos - prevYPos);
+
+			gd.groundNormals[x][y] = glm::normalize(
+					glm::cross(normalX, normalY)
+			) * glm::vec3(1, -1, 1);
 		}
 	}
 
@@ -86,7 +89,8 @@ void Ground::spawn() {
 	int i = 0;
 	for (int sizeX = 0; sizeX < size; sizeX++) {
 		for (int sizeY = 0; sizeY < size; sizeY++) {
-			groundIndices[i] = sizeX + (size + 1) * sizeY;
+			groundIndices[i] = sizeX + (size + 1) *
+									   sizeY;
 			groundIndices[i + 1] = groundIndices[i] + 1;
 			groundIndices[i + 2] = sizeX + (size + 1) * (sizeY + 1);
 			groundIndices[i + 3] = groundIndices[i + 1];
