@@ -1,15 +1,17 @@
-﻿#include <glad/glad.h>
+﻿#include "glad/glad.h"
 
-#include "PerlinNoise.hpp"
+#include "../PerlinNoise.hpp"
 #include "Ground.h"
 
-#include <glm/glm.hpp>
+#include "glm/glm.hpp"
 #include <iostream>
 
-GroundData gd;
+namespace Ground {
+	GroundData gd;
+}
 GLuint groundIndices[size * size * 6];
 
-siv::PerlinNoise::seed_type seed = 2; //3,5,16,47
+siv::PerlinNoise::seed_type seed = 3; //3,5,16,47
 siv::PerlinNoise perlin{seed};
 
 GLFWwindow* gWindow;

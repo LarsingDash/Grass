@@ -7,9 +7,9 @@ set(GLFW_LIB ${PROJECT_SOURCE_DIR}/libs/glfw/lib/x64/glfw3.lib)
 include_directories(${GLFW_INCLUDE_DIR})
 
 add_executable(Grass
-        src/Grass.cpp
+        src/Main.cpp
         src/shader/Shader.cpp
-        src/Ground.cpp
+        src/world/Ground.cpp
         src/Camera.cpp
         src/Camera.h
         src/PerlinNoise.hpp
