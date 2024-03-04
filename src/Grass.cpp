@@ -1,4 +1,4 @@
-﻿#include "Shader.h"
+﻿#include "shader/Shader.h"
 #include "Ground.h"
 #include "Camera.h"
 
@@ -69,14 +69,15 @@ int main() {
 
 void init() {
 	Camera::cameraInit(window);
-	Shader::shaderInit();
+	Shader::groundShaderInit();
 	Ground::groundInit(window);
 }
 
 void update() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	
+
+	Shader::refreshShaders();
 	Camera::updateCamera();
 	Camera::updateUniforms();
 }

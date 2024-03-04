@@ -1,4 +1,4 @@
-﻿#include "Shader.h"
+﻿#include "shader/Shader.h"
 #include "Camera.h"
 
 #include <glm/gtc/matrix_transform.hpp>
@@ -76,13 +76,13 @@ void Camera::updateCamera() {
 void Camera::updateUniforms() {
 	//View
 	glm::mat4 view = glm::lookAt(eye, center, up);
-	GLint viewLocation = glGetUniformLocation(Shader::shaderProgram, "view");
+	GLint viewLocation = glGetUniformLocation(Shader::groundShaderProgram, "view");
 	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
 
 	//Projection
 	glm::mat4 projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(45.f), 1280.f / 720.f, 0.01f, 100.0f);
 
-	GLint projectionLocation = glGetUniformLocation(Shader::shaderProgram, "projection");
+	GLint projectionLocation = glGetUniformLocation(Shader::groundShaderProgram, "projection");
 	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
 }

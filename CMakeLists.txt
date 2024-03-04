@@ -8,7 +8,7 @@ include_directories(${GLFW_INCLUDE_DIR})
 
 add_executable(Grass
         src/Grass.cpp
-        src/Shader.cpp
+        src/shader/Shader.cpp
         src/Ground.cpp
         src/Camera.cpp
         src/Camera.h

@@ -2,8 +2,6 @@
 
 #include "PerlinNoise.hpp"
 #include "Ground.h"
-#include "Shader.h"
-#include "glm/gtc/type_ptr.hpp"
 
 #include <glm/glm.hpp>
 #include <iostream>
@@ -11,7 +9,7 @@
 GroundData gd;
 GLuint groundIndices[size * size * 6];
 
-siv::PerlinNoise::seed_type seed = 16; //3,5,16,47
+siv::PerlinNoise::seed_type seed = 2; //3,5,16,47
 siv::PerlinNoise perlin{seed};
 
 GLFWwindow* gWindow;
@@ -47,7 +45,7 @@ void Ground::groundDestroy() {
 }
 
 void Ground::spawn() {
-	//Ground Vertices
+	//Vertex
 	for (int x = 0; x <= size; x++) {
 		for (int y = 0; y <= size; y++) {
 			const auto fx = float(x);
@@ -57,17 +55,30 @@ void Ground::spawn() {
 			gd.groundVertices[x][y] = glm::vec3(
 					(fx / fSize) * 2 - 1,
 					perlin.octave2D_01(fx / 20.0, fy / 20.0, 1),
+//					perlin.octave2D_01(fx / 2.0, fy / 2.0, 1),
 //					0,
 					(fy / fSize) * 2 - 1);
+		}
+	}
 
-			glm::vec3 normal(0.0f);
-//			if (x > 0 && y > 0) {
-				glm::vec3 edge1 = gd.groundVertices[x][y] - gd.groundVertices[x - 1][y];
-				glm::vec3 edge2 = gd.groundVertices[x][y] - gd.groundVertices[x][y - 1];
-				normal = glm::cross(edge1, edge2);
-//			}
-			gd.groundNormals[x][y] = glm::normalize(normal);
-			if (x == 3 && y == 4) std::cout << gd.groundNormals[x][y].x << "/" << gd.groundNormals[x][y].y << "/" << gd.groundNormals[x][y].z << std::endl;
+	//Normals
+	for (int x = 0; x <= size; x++) {
+		for (int y = 0; y <= size; y++) {
+			glm::vec3 currPos = gd.groundVertices[x][y];
+
+			if (x > 0 && x < size && y > 0 && y < size) {
+				glm::vec3 prevXPos = gd.groundVertices[x - 1][y] - currPos;
+				glm::vec3 nextXPos = gd.groundVertices[x + 1][y] - currPos;
+				glm::vec3 normalX(nextXPos - prevXPos);
+
+				glm::vec3 prevYPos = gd.groundVertices[x][y - 1] - currPos;
+				glm::vec3 nextYPos = gd.groundVertices[x][y + 1] - currPos;
+				glm::vec3 normalY(nextYPos - prevYPos);
+
+				gd.groundNormals[x][y] = glm::normalize(
+						glm::cross(normalX, normalY)
+				) * glm::vec3(1, -1, 1);
+			}
 		}
 	}
 
@@ -87,17 +98,28 @@ void Ground::spawn() {
 	}
 }
 
-bool lastDown = false;
+bool lastEDown = false;
+bool lastQDown = false;
 
 void Ground::draw() {
 	//Next seed
 	if (glfwGetKey(gWindow, GLFW_KEY_E) == GLFW_PRESS) {
-		if (!lastDown) {
-			lastDown = true;
+		if (!lastEDown) {
+			lastEDown = true;
 			perlin.reseed(++seed);
 			groundInit(gWindow);
+			std::cout << "New seed: " << seed << std::endl;
 		}
-	} else lastDown = false;
+	} else lastEDown = false;
+	//Previous seed
+	if (glfwGetKey(gWindow, GLFW_KEY_Q) == GLFW_PRESS) {
+		if (!lastQDown) {
+			lastQDown = true;
+			perlin.reseed(--seed);
+			groundInit(gWindow);
+			std::cout << "New seed: " << seed << std::endl;
+		}
+	} else lastQDown = false;
 
 	//Drawing
 //	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
