@@ -1,16 +1,16 @@
 ﻿#include "shader/Shader.h"
 #include "world/Ground.h"
+#include "world/Grass.h"
 #include "Camera.h"
 
 #include <iostream>
 
-#include <glad/glad.h>
-#include <GLFW/glfw3.h>
-
 //Main
-void init();
-void update();
-void draw();
+namespace Main {
+	void init();
+	void update();
+	void draw();
+}
 
 //Variables
 GLFWwindow* window;
@@ -50,16 +50,17 @@ int main() {
 		return -1;
 	}
 
-	init();
+	Main::init();
 
 	while (!glfwWindowShouldClose(window)) {
-		update();
-		draw();
+		Main::update();
+		Main::draw();
 
 		glfwPollEvents();
 	}
 
 	Ground::groundDestroy();
+	Grass::grassDestroy();
 	Shader::shaderDestroy();
 
 	glfwDestroyWindow(window);
@@ -67,30 +68,41 @@ int main() {
 	return 0;
 }
 
-void init() {
-	Camera::cameraInit(window);
-	Shader::groundShaderInit();
-	Ground::groundInit(window);
-}
-
-void update() {
-	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-		glfwSetWindowShouldClose(window, true);
-
-	Shader::refreshShaders();
-	Camera::updateCamera();
-	Camera::updateUniforms();
-}
-
-void draw() {
-	//GL enable (move to init?)
+void Main::init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+	
+	Camera::cameraInit(window);
+	
+	Shader::groundShaderInit();
+	Shader::grassShaderInit();
+	
+	Ground::groundInit(window);
+	Grass::grassInit(window);
+}
 
+void Main::update() {
+	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+		glfwSetWindowShouldClose(window, true);
+	
+	Shader::refreshShaders();
+	
+	Camera::updateCamera();
+	Camera::updateUniforms();
+	
+	Ground::update();
+	Grass::update();
+}
+
+void Main::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
+	Camera::updateGroundUniforms();
 	Ground::draw();
+	
+	Camera::updateGrassUniforms();
+	Grass::draw();
 
 	glfwSwapBuffers(window);
 }

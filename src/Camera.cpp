@@ -7,7 +7,7 @@
 glm::vec3 eye = glm::vec3(0.0f, 1.0f, 2.0f);
 glm::vec3 center = glm::vec3(0.0f, 1.0f, 1.0f);
 
-constexpr float movementSpeed = 0.1f;
+constexpr float movementSpeed = 0.05f;
 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 forward = glm::normalize(center - eye);
 glm::vec3 right = glm::normalize(glm::cross(forward, up));
@@ -54,35 +54,53 @@ void Camera::updateCamera() {
 
 	//Rotation
 	if (glfwGetKey(windowC, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, up, glm::radians(2.0f)) + eye;
+		center = rotateAroundAxis(center - eye, up, glm::radians(40.0f * movementSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 		right = glm::normalize(glm::cross(forward, up));
 	}
 	if (glfwGetKey(windowC, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, up, glm::radians(-2.0f)) + eye;
+		center = rotateAroundAxis(center - eye, up, glm::radians(-40.0f * movementSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 		right = glm::normalize(glm::cross(forward, up));
 	}
 	if (glfwGetKey(windowC, GLFW_KEY_UP) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, right, glm::radians(2.0f)) + eye;
+		center = rotateAroundAxis(center - eye, right, glm::radians(40.0f * movementSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 	}
 	if (glfwGetKey(windowC, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, right, glm::radians(-2.0f)) + eye;
+		center = rotateAroundAxis(center - eye, right, glm::radians(-40.0f * movementSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 	}
 }
 
+glm::mat4 view;
+glm::mat4 projection;
+
 void Camera::updateUniforms() {
-	//View
-	glm::mat4 view = glm::lookAt(eye, center, up);
-	GLint viewLocation = glGetUniformLocation(Shader::groundShaderProgram, "view");
-	glUniformMatrix4fv(viewLocation, 1, GL_FALSE, glm::value_ptr(view));
+	view = glm::lookAt(eye, center, up);
 
-	//Projection
-	glm::mat4 projection = glm::mat4(1.0f);
+	projection = glm::mat4(1.0f);
 	projection = glm::perspective(glm::radians(45.f), 1280.f / 720.f, 0.01f, 100.0f);
+}
 
-	GLint projectionLocation = glGetUniformLocation(Shader::groundShaderProgram, "projection");
-	glUniformMatrix4fv(projectionLocation, 1, GL_FALSE, glm::value_ptr(projection));
+void Camera::updateGroundUniforms() {
+	glLinkProgram(Shader::groundShaderProgram);
+	glUseProgram(Shader::groundShaderProgram);
+	
+	GLint viewGroundLocation = glGetUniformLocation(Shader::groundShaderProgram, "view");
+	GLint projectionGroundLocation = glGetUniformLocation(Shader::groundShaderProgram, "projection");
+	
+	glUniformMatrix4fv(viewGroundLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionGroundLocation, 1, GL_FALSE, glm::value_ptr(projection));
+}
+
+void Camera::updateGrassUniforms() {
+	glLinkProgram(Shader::grassShaderProgram);
+	glUseProgram(Shader::grassShaderProgram);
+	
+	GLint viewGrassLocation = glGetUniformLocation(Shader::grassShaderProgram, "grassView");
+	GLint projectionGrassLocation = glGetUniformLocation(Shader::grassShaderProgram, "grassProj");
+	
+	glUniformMatrix4fv(viewGrassLocation, 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(projectionGrassLocation, 1, GL_FALSE, glm::value_ptr(projection));
 }

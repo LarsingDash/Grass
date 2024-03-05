@@ -14,11 +14,13 @@ struct GroundData {
 
 namespace Ground {
 	void groundInit(GLFWwindow* window);
-	void groundDestroy();
+	void update();
 	void draw();
 	void spawn();
-	
+	void groundDestroy();
+
 	extern GroundData gd;
+	static GLuint groundIndices[size * size * 6];
 	static unsigned int groundVBO, groundVAO, groundEBO;
 }
 

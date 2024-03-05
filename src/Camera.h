@@ -8,6 +8,9 @@ namespace Camera {
 
 	void updateCamera();
 	void updateUniforms();
+	
+	void updateGroundUniforms();
+	void updateGrassUniforms();
 
 	static GLFWwindow* windowC;
 }

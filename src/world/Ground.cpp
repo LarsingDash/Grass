@@ -2,6 +2,7 @@
 
 #include "../PerlinNoise.hpp"
 #include "Ground.h"
+#include "Grass.h"
 
 #include "glm/glm.hpp"
 #include <iostream>
@@ -9,15 +10,14 @@
 namespace Ground {
 	GroundData gd;
 }
-GLuint groundIndices[size * size * 6];
 
 siv::PerlinNoise::seed_type seed = 3; //3,5,16,47
 siv::PerlinNoise perlin{seed};
 
-GLFWwindow* gWindow;
+GLFWwindow* groundWindow;
 
 void Ground::groundInit(GLFWwindow* window) {
-	gWindow = window;
+	groundWindow = window;
 	Ground::spawn();
 
 	//Ground buffers
@@ -39,11 +39,6 @@ void Ground::groundInit(GLFWwindow* window) {
 
 	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) offsetof(GroundData, groundNormals));
 	glEnableVertexAttribArray(1);
-}
-
-void Ground::groundDestroy() {
-	glDeleteVertexArrays(1, &groundVAO);
-	glDeleteBuffers(1, &groundVBO);
 }
 
 void Ground::spawn() {
@@ -104,32 +99,40 @@ void Ground::spawn() {
 	}
 }
 
+void Ground::draw() {
+//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+//	glLineWidth(1.f);
+
+	glBindVertexArray(groundVAO);
+	glDrawElements(GL_TRIANGLES, size * size * 6, GL_UNSIGNED_INT, nullptr);
+}
+
 bool lastEDown = false;
 bool lastQDown = false;
 
-void Ground::draw() {
+void Ground::update() {
 	//Next seed
-	if (glfwGetKey(gWindow, GLFW_KEY_E) == GLFW_PRESS) {
+	if (glfwGetKey(groundWindow, GLFW_KEY_E) == GLFW_PRESS) {
 		if (!lastEDown) {
 			lastEDown = true;
 			perlin.reseed(++seed);
-			groundInit(gWindow);
+			groundInit(groundWindow);
+			Grass::grassInit(groundWindow);
 			std::cout << "New seed: " << seed << std::endl;
 		}
 	} else lastEDown = false;
 	//Previous seed
-	if (glfwGetKey(gWindow, GLFW_KEY_Q) == GLFW_PRESS) {
+	if (glfwGetKey(groundWindow, GLFW_KEY_Q) == GLFW_PRESS) {
 		if (!lastQDown) {
 			lastQDown = true;
 			perlin.reseed(--seed);
-			groundInit(gWindow);
+			groundInit(groundWindow);
 			std::cout << "New seed: " << seed << std::endl;
 		}
 	} else lastQDown = false;
+}
 
-	//Drawing
-//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//	glLineWidth(1.f);
-	glBindVertexArray(groundVAO);
-	glDrawElements(GL_TRIANGLES, size * size * 6, GL_UNSIGNED_INT, nullptr);
+void Ground::groundDestroy() {
+	glDeleteVertexArrays(1, &groundVAO);
+	glDeleteBuffers(1, &groundVBO);
 }

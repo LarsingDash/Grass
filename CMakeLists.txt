@@ -10,8 +10,8 @@ add_executable(Grass
         src/Main.cpp
         src/shader/Shader.cpp
         src/world/Ground.cpp
+        src/world/Grass.cpp
         src/Camera.cpp
-        src/Camera.h
         src/PerlinNoise.hpp
 )
 
