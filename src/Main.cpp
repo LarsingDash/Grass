@@ -52,11 +52,25 @@ int main() {
 
 	Main::init();
 
+	//Fps counter
+	using namespace std::chrono;
+	auto prevTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+	int fpsCounter;
+
+	//MAIN LOOP
 	while (!glfwWindowShouldClose(window)) {
 		Main::update();
 		Main::draw();
 
 		glfwPollEvents();
+
+		auto currTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		fpsCounter++;
+		if (currTime - prevTime >= 1000) {
+			std::cout << "FPS: " << fpsCounter << std::endl;
+			fpsCounter = 0;
+			prevTime = currTime;
+		}
 	}
 
 	Ground::groundDestroy();
@@ -72,12 +86,12 @@ void Main::init() {
 	glEnable(GL_DEPTH_TEST);
 	glEnable(GL_BLEND);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	
+
 	Camera::cameraInit(window);
-	
+
 	Shader::groundShaderInit();
 	Shader::grassShaderInit();
-	
+
 	Ground::groundInit(window);
 	Grass::grassInit(window);
 }
@@ -85,22 +99,22 @@ void Main::init() {
 void Main::update() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
-	
+
 	Shader::refreshShaders();
-	
+
 	Camera::updateCamera();
 	Camera::updateUniforms();
-	
+
 	Ground::update();
 	Grass::update();
 }
 
 void Main::draw() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	Camera::updateGroundUniforms();
 	Ground::draw();
-	
+
 	Camera::updateGrassUniforms();
 	Grass::draw();
 
