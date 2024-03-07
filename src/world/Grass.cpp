@@ -3,9 +3,11 @@
 #include <iostream>
 #include "Grass.h"
 #include "Ground.h"
+#include "../shader/Shader.h"
 
 GLFWwindow* grassWindow;
 bool grassEnabled = true;
+bool polyEnabled = false;
 
 void Grass::grassInit(GLFWwindow* window) {
 	grassWindow = window;
@@ -23,14 +25,26 @@ void Grass::grassInit(GLFWwindow* window) {
 
 void Grass::draw() {
 	if (!grassEnabled) return;
-	
+
+	GLint grassColor = glGetUniformLocation(Shader::grassShaderProgram, "grassColor");
+	glUniform1i(grassColor, polyEnabled);
+
 	glBindVertexArray(grassVAO);
 	glDrawArrays(GL_POINTS, 0, (size + 1) * (size + 1));
 }
 
 bool lastGDown = false;
+bool lastPDown = false;
 
 void Grass::update() {
+	if (glfwGetKey(grassWindow, GLFW_KEY_P) == GLFW_PRESS) {
+		if (!lastPDown) {
+			lastPDown = true;
+			polyEnabled = !polyEnabled;
+			glPolygonMode(GL_FRONT_AND_BACK, polyEnabled ? GL_LINE : GL_FILL);
+			std::cout << "Poly " << (polyEnabled ? "enabled" : "disabled") << std::endl;
+		}
+	} else lastPDown = false;
 	if (glfwGetKey(grassWindow, GLFW_KEY_G) == GLFW_PRESS) {
 		if (!lastGDown) {
 			lastGDown = true;

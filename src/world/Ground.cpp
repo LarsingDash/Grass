@@ -100,9 +100,6 @@ void Ground::spawn() {
 }
 
 void Ground::draw() {
-//	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-//	glLineWidth(1.f);
-
 	glBindVertexArray(groundVAO);
 	glDrawElements(GL_TRIANGLES, size * size * 6, GL_UNSIGNED_INT, nullptr);
 }
