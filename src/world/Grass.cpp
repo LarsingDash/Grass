@@ -29,6 +29,9 @@ void Grass::draw() {
 	GLint grassColor = glGetUniformLocation(Shader::grassShaderProgram, "grassColor");
 	glUniform1i(grassColor, polyEnabled);
 
+	GLint gridSize = glGetUniformLocation(Shader::grassShaderProgram, "size");
+	glUniform1f(gridSize, size);
+
 	glBindVertexArray(grassVAO);
 	glDrawArrays(GL_POINTS, 0, (size + 1) * (size + 1));
 }

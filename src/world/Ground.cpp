@@ -124,6 +124,7 @@ void Ground::update() {
 			lastQDown = true;
 			perlin.reseed(--seed);
 			groundInit(groundWindow);
+			Grass::grassInit(groundWindow);
 			std::cout << "New seed: " << seed << std::endl;
 		}
 	} else lastQDown = false;
