@@ -20,7 +20,7 @@
 //Main
 namespace Main {
 	void init();
-	void update();
+	void update(float delta);
 	void draw();
 }
 
@@ -73,23 +73,28 @@ int main() {
 
 	//Fps counter
 	using namespace std::chrono;
+	auto prevFPSTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	auto prevTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	int fpsCounter;
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window)) {
-		Main::update();
+		auto currTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
+		fpsCounter++;
+		
+		auto delta = float(currTime - prevTime);
+		prevTime = currTime;
+		
+		if (currTime - prevFPSTime >= 1000) {
+			std::cout << "FPS: " << fpsCounter << std::endl;
+			fpsCounter = 0;
+			prevFPSTime = currTime;
+		}
+		
+		Main::update(delta);
 		Main::draw();
 
 		glfwPollEvents();
-
-		auto currTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-		fpsCounter++;
-		if (currTime - prevTime >= 1000) {
-			std::cout << "FPS: " << fpsCounter << std::endl;
-			fpsCounter = 0;
-			prevTime = currTime;
-		}
 	}
 
 	Ground::groundDestroy();
@@ -118,7 +123,7 @@ void Main::init() {
 bool lastVDown = false;
 bool vsyncEnabled = true;
 
-void Main::update() {
+void Main::update(float delta) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
@@ -134,7 +139,7 @@ void Main::update() {
 
 	Shader::refreshShaders();
 
-	Camera::updateCamera();
+	Camera::updateCamera(delta);
 	Camera::updateUniforms();
 
 	Ground::update();

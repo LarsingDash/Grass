@@ -7,7 +7,7 @@
 glm::vec3 eye = glm::vec3(0.0f, 1.0f, 2.0f);
 glm::vec3 center = glm::vec3(0.0f, 1.0f, 1.0f);
 
-constexpr float movementSpeed = 0.05f;
+constexpr float baseSpeed = 500.f; //Increase in number = decrease in speed
 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
 glm::vec3 forward = glm::normalize(center - eye);
 glm::vec3 right = glm::normalize(glm::cross(forward, up));
@@ -23,7 +23,9 @@ void Camera::cameraInit(GLFWwindow* window) {
 	forward = glm::normalize(center - eye);
 }
 
-void Camera::updateCamera() {
+void Camera::updateCamera(float delta) {
+	float movementSpeed = delta / baseSpeed;
+	
 	//Movement
 	if (glfwGetKey(windowC, GLFW_KEY_W) == GLFW_PRESS) {
 		eye += forward * movementSpeed;

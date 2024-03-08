@@ -6,7 +6,7 @@
 namespace Camera {
 	void cameraInit(GLFWwindow* window);
 
-	void updateCamera();
+	void updateCamera(float delta);
 	void updateUniforms();
 	
 	void updateGroundUniforms();
