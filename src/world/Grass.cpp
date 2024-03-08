@@ -30,7 +30,6 @@ int layers = 3;
 constexpr int maxLayers = 7;
 //Amount of layers * (2 triangles * 3 vertices each) - 3 since the top layer has 1 triangle
 glm::vec3 grassVertices[(maxLayers + 1) * 2 - 1];
-//int grassIndices[maxLayers * 6 - 3];
 constexpr float maxHeight = 0.2f * (50.f / float(size));
 
 void Grass::spawn() {
@@ -63,7 +62,7 @@ void Grass::draw() {
 	GLint gridSize = glGetUniformLocation(Shader::grassShaderProgram, "gridSize");
 	glUniform1i(gridSize, size);
 
-	GLint points = glGetUniformLocation(Shader::grassShaderProgram, "points");
+	GLint points = glGetUniformLocation(Shader::grassShaderProgram, "pointsRaw");
 	glUniform3fv(points, (maxLayers + 1) * 2 - 1, glm::value_ptr(grassVertices[0]));
 
 	glBindVertexArray(grassVAO);
