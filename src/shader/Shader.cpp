@@ -35,7 +35,7 @@ void Shader::grassShaderInit() {
 	loadShader(grassFrag, grassShaderProgram, GL_FRAGMENT_SHADER, grassFragShader);
 }
 
-void Shader::loadShader(const char* path, unsigned int program, GLenum type, unsigned int& shader) {
+void Shader::loadShader(const char* path, unsigned int program, unsigned int type, unsigned int& shader) {
 	std::ifstream shaderFile(path);
 	std::string shaderData((std::istreambuf_iterator<char>(shaderFile)),
 						   std::istreambuf_iterator<char>());
@@ -82,7 +82,7 @@ void Shader::refreshShaders() {
 }
 
 void Shader::_refreshShader(std::filesystem::file_time_type& prevTime, std::filesystem::file_time_type& time,
-							unsigned int program, unsigned int shader, const char* path, GLenum type) {
+							unsigned int program, unsigned int shader, const char* path, unsigned int type) {
 	if (prevTime != time) {
 		prevTime = time;
 
@@ -100,7 +100,7 @@ void Shader::shaderDestroy() {
 }
 
 //Helper
-void Shader::checkShaderErrors(GLuint shaderId) {
+void Shader::checkShaderErrors(unsigned int shaderId) {
 	GLint status;
 	glGetShaderiv(shaderId, GL_COMPILE_STATUS, &status);
 	if (status == GL_FALSE) {

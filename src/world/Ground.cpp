@@ -1,5 +1,4 @@
-﻿#include "glad/glad.h"
-
+﻿#include "../Input.h"
 #include "../PerlinNoise.hpp"
 #include "Ground.h"
 #include "Grass.h"
@@ -54,7 +53,6 @@ void Ground::spawn() {
 			gd.groundVertices[x][y] = glm::vec3(
 					(fx / fSize) * 2 - 1,
 					isHeightEnabled ? perlin.octave2D_11(fx / fSize, fy / fSize, 1) / 2.0f : 0,
-//					perlin.octave2D_01(fx / 2.0, fy / 2.0, 1),
 					(fy / fSize) * 2 - 1);
 		}
 	}
@@ -105,41 +103,25 @@ void Ground::draw() {
 	glDrawElements(GL_TRIANGLES, size * size * 6, GL_UNSIGNED_INT, nullptr);
 }
 
-bool lastEDown = false;
-bool lastQDown = false;
-bool lastHDown = false;
-
-void Ground::update() {
-	//Next seed
-	if (glfwGetKey(groundWindow, GLFW_KEY_E) == GLFW_PRESS) {
-		if (!lastEDown) {
-			lastEDown = true;
-			perlin.reseed(++seed);
-			groundInit(groundWindow);
-			Grass::grassInit(groundWindow);
-			std::cout << "New seed: " << seed << std::endl;
-		}
-	} else lastEDown = false;
-	//Previous seed
-	if (glfwGetKey(groundWindow, GLFW_KEY_Q) == GLFW_PRESS) {
-		if (!lastQDown) {
-			lastQDown = true;
-			perlin.reseed(--seed);
-			groundInit(groundWindow);
-			Grass::grassInit(groundWindow);
-			std::cout << "New seed: " << seed << std::endl;
-		}
-	} else lastQDown = false;
-	//Toggle heightmap
-	if (glfwGetKey(groundWindow, GLFW_KEY_H) == GLFW_PRESS) {
-		if (!lastHDown) {
-			lastHDown = true;
-			isHeightEnabled = !isHeightEnabled;
-			groundInit(groundWindow);
-			Grass::grassInit(groundWindow);
-			std::cout << "Heightmap: " << isHeightEnabled << std::endl;
-		}
-	} else lastHDown = false;
+void Ground::assignInputs() {
+	Input::assignInput(GLFW_KEY_E, []() {
+		perlin.reseed(++seed);
+		groundInit(groundWindow);
+		Grass::grassInit(groundWindow);
+		std::cout << "New seed: " << seed << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_Q, []() {
+		perlin.reseed(--seed);
+		groundInit(groundWindow);
+		Grass::grassInit(groundWindow);
+		std::cout << "New seed: " << seed << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_H, []() {
+		isHeightEnabled = !isHeightEnabled;
+		groundInit(groundWindow);
+		Grass::grassInit(groundWindow);
+		std::cout << "Heightmap: " << isHeightEnabled << std::endl;
+	});
 }
 
 void Ground::groundDestroy() {

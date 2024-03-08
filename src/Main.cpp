@@ -1,7 +1,9 @@
-﻿#include "shader/Shader.h"
+﻿#include "Main.h"
+#include "shader/Shader.h"
 #include "world/Ground.h"
 #include "world/Grass.h"
 #include "Camera.h"
+#include "Input.h"
 
 #include <iostream>
 
@@ -28,6 +30,7 @@ namespace Main {
 //Variables
 GLFWwindow* window;
 const int monitor = 1;
+bool vsyncEnabled = true;
 
 //Main
 int main() {
@@ -119,32 +122,26 @@ void Main::init() {
 
 	Ground::groundInit(window);
 	Grass::grassInit(window);
-}
 
-bool lastVDown = false;
-bool vsyncEnabled = true;
+	Input::assignInput(GLFW_KEY_V, []() {
+		vsyncEnabled = !vsyncEnabled;
+		std::cout << "Vsync: " << vsyncEnabled << std::endl;
+		glfwSwapInterval(vsyncEnabled);
+	});
+
+	Grass::assignInputs();
+	Ground::assignInputs();
+}
 
 void Main::update(float delta) {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
 
-	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
-		if (!lastVDown) {
-			lastVDown = true;
-			vsyncEnabled = !vsyncEnabled;
-			std::cout << "Vsync: " << vsyncEnabled << std::endl;
-
-			glfwSwapInterval(vsyncEnabled);
-		}
-	} else lastVDown = false;
-
 	Shader::refreshShaders();
+	Input::updateInputs(window);
 
 	Camera::updateCamera(delta);
 	Camera::updateUniforms();
-
-	Ground::update();
-	Grass::update();
 }
 
 void Main::draw() {

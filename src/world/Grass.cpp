@@ -1,4 +1,4 @@
-﻿#include "glad/glad.h"
+﻿#include "../Input.h"
 
 #include <iostream>
 #include "Grass.h"
@@ -70,43 +70,26 @@ void Grass::draw() {
 	glDrawArrays(GL_POINTS, 0, (size + 1) * (size + 1));
 }
 
-bool lastGDown = false;
-bool lastPDown = false;
-bool lastRDown = false;
-bool lastFDown = false;
-
-void Grass::update() {
-	if (glfwGetKey(grassWindow, GLFW_KEY_P) == GLFW_PRESS) {
-		if (!lastPDown) {
-			lastPDown = true;
-			polyEnabled = !polyEnabled;
-			glPolygonMode(GL_FRONT_AND_BACK, polyEnabled ? GL_LINE : GL_FILL);
-			std::cout << "Poly: " << (polyEnabled ? "enabled" : "disabled") << std::endl;
-		}
-	} else lastPDown = false;
-	if (glfwGetKey(grassWindow, GLFW_KEY_G) == GLFW_PRESS) {
-		if (!lastGDown) {
-			lastGDown = true;
-			grassEnabled = !grassEnabled;
-			std::cout << "Grass: " << (grassEnabled ? "enabled" : "disabled") << std::endl;
-		}
-	} else lastGDown = false;
-	if (glfwGetKey(grassWindow, GLFW_KEY_R) == GLFW_PRESS) {
-		if (!lastRDown) {
-			lastRDown = true;
-			layers++;
-			Grass::spawn();
-			std::cout << "LOD: " << layers << std::endl;
-		}
-	} else lastRDown = false;
-	if (glfwGetKey(grassWindow, GLFW_KEY_F) == GLFW_PRESS) {
-		if (!lastFDown) {
-			lastFDown = true;
-			layers--;
-			Grass::spawn();
-			std::cout << "LOD: " << layers << std::endl;
-		}
-	} else lastFDown = false;
+void Grass::assignInputs() {
+	Input::assignInput(GLFW_KEY_P, []() {
+		polyEnabled = !polyEnabled;
+		glPolygonMode(GL_FRONT_AND_BACK, polyEnabled ? GL_LINE : GL_FILL);
+		std::cout << "Poly: " << (polyEnabled ? "enabled" : "disabled") << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_G, []() {
+		grassEnabled = !grassEnabled;
+		std::cout << "Grass: " << (grassEnabled ? "enabled" : "disabled") << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_R, []() {
+		layers++;
+		Grass::spawn();
+		std::cout << "LOD: " << layers << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_F, []() {
+		layers--;
+		Grass::spawn();
+		std::cout << "LOD: " << layers << std::endl;
+	});
 }
 
 void Grass::grassDestroy() {

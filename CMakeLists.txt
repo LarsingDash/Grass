@@ -13,6 +13,9 @@ add_executable(Grass
         src/world/Grass.cpp
         src/Camera.cpp
         src/PerlinNoise.hpp
+        src/Input.h
+        src/Main.h
+        src/Input.cpp
 )
 
 add_subdirectory(${CMAKE_SOURCE_DIR}/libs/glm)

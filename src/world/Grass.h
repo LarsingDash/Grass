@@ -1,13 +1,13 @@
 ﻿#ifndef GRASS_GRASS_H
 #define GRASS_GRASS_H
 
-#include "GLFW/glfw3.h"
+#include "../Main.h"
 
 namespace Grass {
 	void grassInit(GLFWwindow* window);
 	void spawn();
 	void draw();
-	void update();
+	void assignInputs();
 	void grassDestroy();
 	
 	static unsigned int grassVBO, grassVAO;

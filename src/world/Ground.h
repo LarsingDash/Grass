@@ -1,7 +1,7 @@
 ﻿#ifndef GRASS_GROUND_H
 #define GRASS_GROUND_H
 
-#include "GLFW/glfw3.h"
+#include "../Main.h"
 
 #include "glm/vec3.hpp"
 #include <vector>
@@ -14,7 +14,7 @@ struct GroundData {
 
 namespace Ground {
 	void groundInit(GLFWwindow* window);
-	void update();
+	void assignInputs();
 	void draw();
 	void spawn();
 	void groundDestroy();

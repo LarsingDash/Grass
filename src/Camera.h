@@ -1,7 +1,7 @@
 ﻿#ifndef GRASS_CAMERA_H
 #define GRASS_CAMERA_H
 
-#include "GLFW/glfw3.h"
+#include "Main.h"
 
 namespace Camera {
 	void cameraInit(GLFWwindow* window);
