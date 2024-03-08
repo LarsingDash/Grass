@@ -2,7 +2,7 @@
 out vec4 FragColor;
 
 in float height;
-in vec3 fragNormal;
+//in vec3 fragNormal;
 
 uniform int grassColor;
 

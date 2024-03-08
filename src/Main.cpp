@@ -16,6 +16,7 @@
 //P			- Toggle polygon mode
 //G			- Toggle grass
 //V			- Toggle vsync
+//R/F		- Inc/Decrease grass LOD
 
 //Main
 namespace Main {
@@ -75,7 +76,7 @@ int main() {
 	using namespace std::chrono;
 	auto prevFPSTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
 	auto prevTime = duration_cast<milliseconds>(system_clock::now().time_since_epoch()).count();
-	int fpsCounter;
+	int fpsCounter = 0;
 
 	//MAIN LOOP
 	while (!glfwWindowShouldClose(window)) {

@@ -5,6 +5,7 @@
 
 namespace Grass {
 	void grassInit(GLFWwindow* window);
+	void spawn();
 	void draw();
 	void update();
 	void grassDestroy();
