@@ -2,11 +2,17 @@
 out vec4 FragColor;
 
 in float height;
+in vec3 fragNormal;
+
 uniform int grassColor;
 
 void main()
 {
-    float value = 0.4 + (0.2 * height);
+    vec3 lightDirection = vec3(1, 1, 1);
+    float lighting = max(0.0, dot(normalize(vec3(1, 1, 1)), normalize(lightDirection)));
+
+    float value = 0.2 + (0.2 * height) + (0.2 * lighting);
+    
     FragColor = vec4(
         0.0,
         grassColor == 1 ? 0.0 : value,

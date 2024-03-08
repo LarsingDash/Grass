@@ -5,6 +5,18 @@
 
 #include <iostream>
 
+//KEYBINDINGS
+//Escape	- Close / quit
+//WASD		- Camera movement
+//Arrows	- Camera rotation
+//Space		- Camera up
+//Shift		- Camera down
+//Q/E		- Previous/Next seed
+//H			- Toggle heightmap
+//P			- Toggle polygon mode
+//G			- Toggle grass
+//V			- Toggle vsync
+
 //Main
 namespace Main {
 	void init();
@@ -33,9 +45,16 @@ int main() {
 	GLFWmonitor** monitors = glfwGetMonitors(&windows);
 
 	window = glfwCreateWindow(1920, 1080, "Grass", monitors[monitor], nullptr);
-	glfwSwapInterval(1);
 #else
-	window = glfwCreateWindow(1280, 720, "Grass", nullptr, nullptr);
+#define BIG_SIZE 1
+#if BIG_SIZE
+	int width = 1600;
+	int height = 900;
+#else
+	int width = 1280;
+	int height = 720;
+#endif
+	window = glfwCreateWindow(width, height, "Grass", nullptr, nullptr);
 #endif
 
 	if (window == nullptr) {
@@ -96,9 +115,22 @@ void Main::init() {
 	Grass::grassInit(window);
 }
 
+bool lastVDown = false;
+bool vsyncEnabled = true;
+
 void Main::update() {
 	if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 		glfwSetWindowShouldClose(window, true);
+
+	if (glfwGetKey(window, GLFW_KEY_V) == GLFW_PRESS) {
+		if (!lastVDown) {
+			lastVDown = true;
+			vsyncEnabled = !vsyncEnabled;
+			std::cout << "Vsync: " << vsyncEnabled << std::endl;
+
+			glfwSwapInterval(vsyncEnabled);
+		}
+	} else lastVDown = false;
 
 	Shader::refreshShaders();
 

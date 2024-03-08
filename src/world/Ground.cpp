@@ -16,6 +16,8 @@ siv::PerlinNoise perlin{seed};
 
 GLFWwindow* groundWindow;
 
+bool isHeightEnabled = true;
+
 void Ground::groundInit(GLFWwindow* window) {
 	groundWindow = window;
 	Ground::spawn();
@@ -51,9 +53,8 @@ void Ground::spawn() {
 
 			gd.groundVertices[x][y] = glm::vec3(
 					(fx / fSize) * 2 - 1,
-					perlin.octave2D_01(fx / fSize, fy / fSize, 1),
+					isHeightEnabled ? perlin.octave2D_11(fx / fSize, fy / fSize, 1) / 2.0f : 0,
 //					perlin.octave2D_01(fx / 2.0, fy / 2.0, 1),
-//					0,
 					(fy / fSize) * 2 - 1);
 		}
 	}
@@ -106,6 +107,7 @@ void Ground::draw() {
 
 bool lastEDown = false;
 bool lastQDown = false;
+bool lastHDown = false;
 
 void Ground::update() {
 	//Next seed
@@ -128,6 +130,16 @@ void Ground::update() {
 			std::cout << "New seed: " << seed << std::endl;
 		}
 	} else lastQDown = false;
+	//Toggle heightmap
+	if (glfwGetKey(groundWindow, GLFW_KEY_H) == GLFW_PRESS) {
+		if (!lastHDown) {
+			lastHDown = true;
+			isHeightEnabled = !isHeightEnabled;
+			groundInit(groundWindow);
+			Grass::grassInit(groundWindow);
+			std::cout << "Heightmap: " << isHeightEnabled << std::endl;
+		}
+	} else lastHDown = false;
 }
 
 void Ground::groundDestroy() {
