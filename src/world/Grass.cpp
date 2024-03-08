@@ -63,7 +63,7 @@ void Grass::draw() {
 	GLint gridSize = glGetUniformLocation(Shader::grassShaderProgram, "gridSize");
 	glUniform1i(gridSize, size);
 
-	GLint points = glGetUniformLocation(Shader::grassShaderProgram, "points");
+	GLint points = glGetUniformLocation(Shader::grassShaderProgram, "pointsRaw");
 	glUniform3fv(points, (maxLayers + 1) * 2 - 1, glm::value_ptr(grassVertices[0]));
 
 	glBindVertexArray(grassVAO);
