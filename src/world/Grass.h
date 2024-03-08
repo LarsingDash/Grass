@@ -4,7 +4,7 @@
 #include "../Main.h"
 
 namespace Grass {
-	void grassInit(GLFWwindow* window);
+	void grassInit();
 	void spawn();
 	void draw();
 	void assignInputs();

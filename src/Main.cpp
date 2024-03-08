@@ -120,8 +120,8 @@ void Main::init() {
 	Shader::groundShaderInit();
 	Shader::grassShaderInit();
 
-	Ground::groundInit(window);
-	Grass::grassInit(window);
+	Ground::groundInit();
+	Grass::grassInit();
 
 	Input::assignInput(GLFW_KEY_V, []() {
 		vsyncEnabled = !vsyncEnabled;

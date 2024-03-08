@@ -6,13 +6,10 @@
 #include "../shader/Shader.h"
 #include "glm/gtc/type_ptr.hpp"
 
-GLFWwindow* grassWindow;
 bool grassEnabled = true;
 bool polyEnabled = false;
 
-void Grass::grassInit(GLFWwindow* window) {
-	grassWindow = window;
-
+void Grass::grassInit() {
 	Grass::spawn();
 
 	glGenVertexArrays(1, &grassVAO);

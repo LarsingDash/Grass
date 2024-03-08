@@ -13,12 +13,9 @@ namespace Ground {
 siv::PerlinNoise::seed_type seed = 3; //3,5,16,47
 siv::PerlinNoise perlin{seed};
 
-GLFWwindow* groundWindow;
-
 bool isHeightEnabled = true;
 
-void Ground::groundInit(GLFWwindow* window) {
-	groundWindow = window;
+void Ground::groundInit() {
 	Ground::spawn();
 
 	//Ground buffers
@@ -106,20 +103,20 @@ void Ground::draw() {
 void Ground::assignInputs() {
 	Input::assignInput(GLFW_KEY_E, []() {
 		perlin.reseed(++seed);
-		groundInit(groundWindow);
-		Grass::grassInit(groundWindow);
+		groundInit();
+		Grass::grassInit();
 		std::cout << "New seed: " << seed << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_Q, []() {
 		perlin.reseed(--seed);
-		groundInit(groundWindow);
-		Grass::grassInit(groundWindow);
+		groundInit();
+		Grass::grassInit();
 		std::cout << "New seed: " << seed << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_H, []() {
 		isHeightEnabled = !isHeightEnabled;
-		groundInit(groundWindow);
-		Grass::grassInit(groundWindow);
+		groundInit();
+		Grass::grassInit();
 		std::cout << "Heightmap: " << isHeightEnabled << std::endl;
 	});
 }

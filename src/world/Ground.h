@@ -13,7 +13,7 @@ struct GroundData {
 };
 
 namespace Ground {
-	void groundInit(GLFWwindow* window);
+	void groundInit();
 	void assignInputs();
 	void draw();
 	void spawn();
