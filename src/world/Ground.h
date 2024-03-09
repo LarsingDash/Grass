@@ -7,7 +7,7 @@
 #include "glm/vec2.hpp"
 #include <vector>
 
-constexpr int size = 50;
+constexpr int size = 100;
 struct GroundData {
 	glm::vec3 groundVertices[size + 1][size + 1];
 	glm::vec3 groundNormals[size + 1][size + 1];

@@ -120,21 +120,21 @@ void Grass::assignInputs() {
 		grassEnabled = !grassEnabled;
 		std::cout << "Grass: " << (grassEnabled ? "enabled" : "disabled") << std::endl;
 	});
-	Input::assignInput(GLFW_KEY_R, []() {
-		layers++;
+	Input::assignInput(GLFW_KEY_Z, []() {
+		layers = glm::max(1, layers - 1);
+		Grass::spawn();
+		std::cout << "LOD: " << layers << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_X, []() {
+		layers = glm::min(maxLayers, layers + 1);
 		Grass::spawn();
 		std::cout << "LOD: " << layers << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_F, []() {
-		layers--;
-		Grass::spawn();
-		std::cout << "LOD: " << layers << std::endl;
-	});
-	Input::assignInput(GLFW_KEY_MINUS, []() {
 		windFrozen = !windFrozen;
 		std::cout << "WindFrozen: " << windFrozen << std::endl;
 	});
-	Input::assignInput(GLFW_KEY_EQUAL, []() {
+	Input::assignInput(GLFW_KEY_R, []() {
 		windActive = !windActive;
 		std::cout << "WindActive: " << windActive << std::endl;
 	});

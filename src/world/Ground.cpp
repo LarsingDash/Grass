@@ -105,13 +105,13 @@ void Ground::assignInputs() {
 		perlin.reseed(++groundSeed);
 		groundInit();
 		Grass::grassInit();
-		std::cout << "New groundSeed: " << groundSeed << std::endl;
+		std::cout << "New seed: " << groundSeed << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_Q, []() {
 		perlin.reseed(--groundSeed);
 		groundInit();
 		Grass::grassInit();
-		std::cout << "New groundSeed: " << groundSeed << std::endl;
+		std::cout << "New seed: " << groundSeed << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_H, []() {
 		isHeightEnabled = !isHeightEnabled;

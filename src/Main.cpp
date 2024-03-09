@@ -18,9 +18,9 @@
 //P			- Toggle polygon mode
 //G			- Toggle grass
 //V			- Toggle vsync
-//R/F		- Inc/Decrease grass LOD
-//-			- Freeze wind
-//=			- Disable wind
+//Z/X		- Inc/Decrease grass LOD
+//F			- Freeze wind
+//R			- Disable wind
 
 //Main
 namespace Main {
