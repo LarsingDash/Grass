@@ -51,7 +51,7 @@ int layers = 5;
 constexpr int maxLayers = 10;
 //Amount of layers * (2 triangles * 3 vertices each) - 3 since the top layer has 1 triangle
 glm::vec3 grassVertices[(maxLayers + 1) * 2 - 1];
-constexpr float maxHeight = 0.2f * (50.f / float(size));
+float maxHeight = 0.2f * (50.f / float(size));
 
 void Grass::spawn() {
 	auto fLayer = float(layers);

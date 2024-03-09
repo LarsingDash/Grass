@@ -6,7 +6,9 @@
 #include "glm/glm.hpp"
 #include <iostream>
 
+int size = 100;
 namespace Ground {
+
 	GroundData gd;
 	int verticesSize;
 	int normalsSize;
@@ -23,9 +25,6 @@ siv::PerlinNoise perlin{groundSeed};
 bool isHeightEnabled = true;
 
 void Ground::groundInit() {
-	// Allocate memory for vertices, normals, and wind data
-	
-
 	// Initialize pointers array
 	auto** vertices = new glm::vec3* [size + 1];
 	auto** normals = new glm::vec3* [size + 1];
@@ -36,15 +35,20 @@ void Ground::groundInit() {
 		wind[i] = &windData[i * (size + 1)];
 	}
 
+	//Assign to gd
 	gd = GroundData{
 			.groundVertices = vertices,
 			.groundNormals = normals,
 			.windData = wind,
 	};
 
-	verticesSize = sizeof(glm::vec3) * (size + 1) * (size + 1);
-	normalsSize = sizeof(glm::vec3) * (size + 1) * (size + 1);
-	windDataSize = sizeof(glm::vec2) * (size + 1) * (size + 1);
+	//Sizes
+	verticesSize = int(sizeof(glm::vec3)) * (size + 1) * (size + 1);
+	normalsSize = int(sizeof(glm::vec3)) * (size + 1) * (size + 1);
+	windDataSize = int(sizeof(glm::vec2)) * (size + 1) * (size + 1);
+
+	//Indices
+	groundIndices = new GLuint[(size * size * 6)];
 
 	Ground::spawn();
 
@@ -52,7 +56,7 @@ void Ground::groundInit() {
 	glGenVertexArrays(1, &groundVAO);
 	glGenBuffers(1, &groundVBO);
 	glBindVertexArray(groundVAO);
-	
+
 	//Assigning empty data
 	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
 	glBufferData(GL_ARRAY_BUFFER, verticesSize + normalsSize + windDataSize, nullptr, GL_STATIC_DRAW);
@@ -65,13 +69,14 @@ void Ground::groundInit() {
 	//Element buffer
 	glGenBuffers(1, &groundEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, groundEBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, int(sizeof(GLuint)) * size * size * 6, groundIndices, GL_STATIC_DRAW);
 
 	//Binding pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr); // Assuming vertices are at offset 0
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(static_cast<intptr_t>(verticesSize)));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3),
+						  reinterpret_cast<void*>(static_cast<intptr_t>(verticesSize)));
 	glEnableVertexAttribArray(1);
 }
 
@@ -153,6 +158,18 @@ void Ground::assignInputs() {
 		groundInit();
 		Grass::grassInit();
 		std::cout << "Heightmap: " << isHeightEnabled << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_MINUS, []() {
+		size -= 10;
+		groundInit();
+		Grass::grassInit();
+		std::cout << "Size: " << size << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_EQUAL, []() {
+		size += 10;
+		groundInit();
+		Grass::grassInit();
+		std::cout << "Size: " << size << std::endl;
 	});
 }
 

@@ -7,7 +7,7 @@
 #include "glm/vec2.hpp"
 #include <vector>
 
-constexpr int size = 100;
+extern int size;
 struct GroundData {
 	glm::vec3 **groundVertices;
 	glm::vec3 **groundNormals;
@@ -29,7 +29,7 @@ namespace Ground {
 	extern glm::vec3* normalsData;
 	extern glm::vec2* windData;
 	
-	static GLuint groundIndices[size * size * 6];
+	static GLuint* groundIndices;
 	static unsigned int groundVBO, groundVAO, groundEBO;
 }
 
