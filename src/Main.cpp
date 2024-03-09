@@ -19,6 +19,8 @@
 //G			- Toggle grass
 //V			- Toggle vsync
 //R/F		- Inc/Decrease grass LOD
+//-			- Freeze wind
+//=			- Disable wind
 
 //Main
 namespace Main {
@@ -142,6 +144,8 @@ void Main::update(float delta) {
 
 	Camera::updateCamera(delta);
 	Camera::updateUniforms();
+	
+	Grass::update(delta);
 }
 
 void Main::draw() {

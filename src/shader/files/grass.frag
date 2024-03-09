@@ -11,7 +11,7 @@ void main()
     vec3 lightDirection = vec3(1, 1, 1);
     float lighting = max(0.0, dot(normalize(fragNormal), normalize(lightDirection)));
 
-    float value = 0.2 + (0.2 * height) + (0.2 * lighting);
+    float value = 0.2 + (0.2 * height) + (0.3 * lighting);
 
     FragColor = vec4(
         0.0,

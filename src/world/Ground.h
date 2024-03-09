@@ -4,12 +4,14 @@
 #include "../Main.h"
 
 #include "glm/vec3.hpp"
+#include "glm/vec2.hpp"
 #include <vector>
 
 constexpr int size = 50;
 struct GroundData {
 	glm::vec3 groundVertices[size + 1][size + 1];
 	glm::vec3 groundNormals[size + 1][size + 1];
+	glm::vec2 windData[size + 1][size + 1];
 };
 
 namespace Ground {

@@ -6,7 +6,9 @@
 namespace Grass {
 	void grassInit();
 	void spawn();
+	void windData();
 	void draw();
+	void update(float delta);
 	void assignInputs();
 	void grassDestroy();
 	
