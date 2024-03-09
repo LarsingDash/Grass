@@ -22,17 +22,28 @@ void Grass::grassInit() {
 	Grass::spawn();
 	Grass::windData();
 
+	//Grass buffers
 	glGenVertexArrays(1, &grassVAO);
 	glGenBuffers(1, &grassVBO);
 	glBindVertexArray(grassVAO);
 
+	//Assigning empty data
 	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Ground::gd), &Ground::gd, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, Ground::verticesSize + Ground::normalsSize + Ground::windDataSize, nullptr,
+				 GL_STATIC_DRAW);
 
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) offsetof(GroundData, groundVertices));
+	//Filling SubData
+	glBufferSubData(GL_ARRAY_BUFFER, 0, Ground::verticesSize, Ground::verticesData);
+	glBufferSubData(GL_ARRAY_BUFFER, Ground::verticesSize, Ground::normalsSize, Ground::normalsData);
+	glBufferSubData(GL_ARRAY_BUFFER, Ground::verticesSize + Ground::normalsSize, Ground::windDataSize,
+					Ground::windData);
+
+	//Binding pointers
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr); // Assuming vertices are at offset 0
 	glEnableVertexAttribArray(2);
 
-	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*) offsetof(GroundData, windData));
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),
+						  reinterpret_cast<void*>(static_cast<intptr_t>(Ground::verticesSize + Ground::normalsSize)));
 	glEnableVertexAttribArray(3);
 }
 
@@ -105,9 +116,14 @@ void Grass::update(float delta) {
 	Grass::windData();
 
 	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);
-	void* data = glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
-	memcpy(data, &Ground::gd, sizeof(Ground::gd));
-	glUnmapBuffer(GL_ARRAY_BUFFER);
+	glBufferData(GL_ARRAY_BUFFER, Ground::verticesSize + Ground::normalsSize + Ground::windDataSize, nullptr,
+				 GL_STATIC_DRAW);
+
+	//Filling SubData
+	glBufferSubData(GL_ARRAY_BUFFER, 0, Ground::verticesSize, Ground::verticesData);
+	glBufferSubData(GL_ARRAY_BUFFER, Ground::verticesSize, Ground::normalsSize, Ground::normalsData);
+	glBufferSubData(GL_ARRAY_BUFFER, Ground::verticesSize + Ground::normalsSize, Ground::windDataSize,
+					Ground::windData);
 }
 
 void Grass::assignInputs() {

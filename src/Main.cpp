@@ -131,8 +131,8 @@ void Main::init() {
 		glfwSwapInterval(vsyncEnabled);
 	});
 
-	Grass::assignInputs();
 	Ground::assignInputs();
+	Grass::assignInputs();
 }
 
 void Main::update(float delta) {

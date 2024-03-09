@@ -9,9 +9,9 @@
 
 constexpr int size = 100;
 struct GroundData {
-	glm::vec3 groundVertices[size + 1][size + 1];
-	glm::vec3 groundNormals[size + 1][size + 1];
-	glm::vec2 windData[size + 1][size + 1];
+	glm::vec3 **groundVertices;
+	glm::vec3 **groundNormals;
+	glm::vec2 **windData;
 };
 
 namespace Ground {
@@ -22,6 +22,13 @@ namespace Ground {
 	void groundDestroy();
 
 	extern GroundData gd;
+	extern int verticesSize;
+	extern int normalsSize;
+	extern int windDataSize;
+	extern glm::vec3* verticesData;
+	extern glm::vec3* normalsData;
+	extern glm::vec2* windData;
+	
 	static GLuint groundIndices[size * size * 6];
 	static unsigned int groundVBO, groundVAO, groundEBO;
 }

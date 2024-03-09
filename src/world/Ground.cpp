@@ -8,6 +8,13 @@
 
 namespace Ground {
 	GroundData gd;
+	int verticesSize;
+	int normalsSize;
+	int windDataSize;
+
+	glm::vec3* verticesData = new glm::vec3[(size + 1) * (size + 1)];
+	glm::vec3* normalsData = new glm::vec3[(size + 1) * (size + 1)];
+	glm::vec2* windData = new glm::vec2[(size + 1) * (size + 1)];
 }
 
 siv::PerlinNoise::seed_type groundSeed = 3; //3,5,16,47
@@ -16,26 +23,55 @@ siv::PerlinNoise perlin{groundSeed};
 bool isHeightEnabled = true;
 
 void Ground::groundInit() {
+	// Allocate memory for vertices, normals, and wind data
+	
+
+	// Initialize pointers array
+	auto** vertices = new glm::vec3* [size + 1];
+	auto** normals = new glm::vec3* [size + 1];
+	auto** wind = new glm::vec2* [size + 1];
+	for (int i = 0; i <= size; i++) {
+		vertices[i] = &verticesData[i * (size + 1)];
+		normals[i] = &normalsData[i * (size + 1)];
+		wind[i] = &windData[i * (size + 1)];
+	}
+
+	gd = GroundData{
+			.groundVertices = vertices,
+			.groundNormals = normals,
+			.windData = wind,
+	};
+
+	verticesSize = sizeof(glm::vec3) * (size + 1) * (size + 1);
+	normalsSize = sizeof(glm::vec3) * (size + 1) * (size + 1);
+	windDataSize = sizeof(glm::vec2) * (size + 1) * (size + 1);
+
 	Ground::spawn();
 
 	//Ground buffers
 	glGenVertexArrays(1, &groundVAO);
 	glGenBuffers(1, &groundVBO);
 	glBindVertexArray(groundVAO);
-
+	
+	//Assigning empty data
 	glBindBuffer(GL_ARRAY_BUFFER, groundVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(gd), &gd, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, verticesSize + normalsSize + windDataSize, nullptr, GL_STATIC_DRAW);
+
+	//Filling SubData
+	glBufferSubData(GL_ARRAY_BUFFER, 0, verticesSize, verticesData);
+	glBufferSubData(GL_ARRAY_BUFFER, verticesSize, normalsSize, normalsData);
+	glBufferSubData(GL_ARRAY_BUFFER, verticesSize + normalsSize, windDataSize, windData);
 
 	//Element buffer
 	glGenBuffers(1, &groundEBO);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, groundEBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(groundIndices), groundIndices, GL_STATIC_DRAW);
 
-	//Binding shader attributes
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) offsetof(GroundData, groundVertices));
+	//Binding pointers
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr); // Assuming vertices are at offset 0
 	glEnableVertexAttribArray(0);
 
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*) offsetof(GroundData, groundNormals));
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), reinterpret_cast<void*>(static_cast<intptr_t>(verticesSize)));
 	glEnableVertexAttribArray(1);
 }
 
@@ -82,8 +118,7 @@ void Ground::spawn() {
 	int i = 0;
 	for (int sizeX = 0; sizeX < size; sizeX++) {
 		for (int sizeY = 0; sizeY < size; sizeY++) {
-			groundIndices[i] = sizeX + (size + 1) *
-									   sizeY;
+			groundIndices[i] = sizeX + (size + 1) * sizeY;
 			groundIndices[i + 1] = groundIndices[i] + 1;
 			groundIndices[i + 2] = sizeX + (size + 1) * (sizeY + 1);
 			groundIndices[i + 3] = groundIndices[i + 1];
