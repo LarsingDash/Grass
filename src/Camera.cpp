@@ -4,8 +4,8 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-glm::vec3 eye = glm::vec3(0.0f, 1.0f, 2.0f);
-glm::vec3 center = glm::vec3(0.0f, 1.0f, 1.0f);
+glm::vec3 eye = glm::vec3(0.0f, 0.5f, 2.0f);
+glm::vec3 center = glm::vec3(0.0f, 0.25f, 1.0f);
 
 constexpr float baseSpeed = 500.f; //Increase in number = decrease in speed
 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -19,7 +19,6 @@ glm::vec3 rotateAroundAxis(const glm::vec3& pointToRotate, const glm::vec3& axis
 
 void Camera::cameraInit(GLFWwindow* window) {
 	windowC = window;
-	center = rotateAroundAxis(center - eye, right, glm::radians(-15.0f)) + eye;
 	forward = glm::normalize(center - eye);
 }
 

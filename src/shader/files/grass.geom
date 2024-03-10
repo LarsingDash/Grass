@@ -24,8 +24,8 @@ void main() {
     //Precalculate all points
     for (int i = 0; i < (MAX_LAYERS + 1) * 2 - 1; i++) {
         vec3 raw = pointsRaw[i];
-        float factor = pow(raw.y / maxHeight, 2.5) / (size[0] / 15.0);
-        points[i] = vec4(raw.x + wind[0].x * factor, raw.y, raw.z + wind[0].y * factor, 1) + gl_in[0].gl_Position;
+        float factor = pow(raw.y / maxHeight, 2.5) / (size[0] / 10.0);
+        points[i] = vec4(raw.x + wind[0].x * factor, raw.y / (size[0] / 15.0), raw.z + wind[0].y * factor, 1) + gl_in[0].gl_Position;
     }
 
     //Loop through for emitting vertices and normals
