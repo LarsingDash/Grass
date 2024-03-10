@@ -1,11 +1,11 @@
 ﻿#version 330 core
 
-#define MAX_LAYERS 10
+#define MAX_LAYERS 11
 #define PI 3.14159265359 
 
 //In / Out
 layout (points) in;
-layout (triangle_strip, max_vertices = 57) out; //MAX_LAYERS * 6 - 3
+layout (triangle_strip, max_vertices = 63) out; //MAX_LAYERS * 6 - 3
 
 in mat4 matrices[1];
 in vec2 wind[1];

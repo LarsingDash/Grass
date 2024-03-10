@@ -48,7 +48,7 @@ void Grass::grassInit() {
 }
 
 int layers = 5;
-constexpr int maxLayers = 10;
+constexpr int maxLayers = 11;
 //Amount of layers * (2 triangles * 3 vertices each) - 3 since the top layer has 1 triangle
 glm::vec3 grassVertices[(maxLayers + 1) * 2 - 1];
 float maxHeight = 0.2f * (50.f / float(Ground::size));
@@ -130,11 +130,11 @@ void Grass::assignInputs() {
 	Input::assignInput(GLFW_KEY_P, []() {
 		polyEnabled = !polyEnabled;
 		glPolygonMode(GL_FRONT_AND_BACK, polyEnabled ? GL_LINE : GL_FILL);
-		std::cout << "Poly: " << (polyEnabled ? "enabled" : "disabled") << std::endl;
+		std::cout << "Poly: " << polyEnabled << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_G, []() {
 		grassEnabled = !grassEnabled;
-		std::cout << "Grass: " << (grassEnabled ? "enabled" : "disabled") << std::endl;
+		std::cout << "Grass: " << grassEnabled << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_Z, []() {
 		layers = glm::max(1, layers - 1);
@@ -142,7 +142,7 @@ void Grass::assignInputs() {
 		std::cout << "LOD: " << layers << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_X, []() {
-		layers = glm::min(maxLayers, layers + 1);
+		layers = glm::min(maxLayers - 1, layers + 1);
 		Grass::spawn();
 		std::cout << "LOD: " << layers << std::endl;
 	});
