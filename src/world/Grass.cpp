@@ -51,11 +51,11 @@ int layers = 5;
 constexpr int maxLayers = 10;
 //Amount of layers * (2 triangles * 3 vertices each) - 3 since the top layer has 1 triangle
 glm::vec3 grassVertices[(maxLayers + 1) * 2 - 1];
-float maxHeight = 0.2f * (50.f / float(size));
+float maxHeight = 0.2f * (50.f / float(Ground::size));
 
 void Grass::spawn() {
 	auto fLayer = float(layers);
-	float maxOffset = 0.01f * (50.f / float(size));
+	float maxOffset = 0.01f * (50.f / float(Ground::size));
 
 	//Generate vertices: 2 per layer + top
 	int vertI = 0;
@@ -72,13 +72,13 @@ void Grass::spawn() {
 }
 
 void Grass::windData() {
-	for (int x = 0; x <= size; x++) {
-		for (int y = 0; y <= size; y++) {
+	for (int x = 0; x <= Ground::size; x++) {
+		for (int y = 0; y <= Ground::size; y++) {
 			if (windActive) {
 				const auto fx = float(x);
 				const auto fy = float(y);
 
-				const auto fSize = float(size) * 1.5;
+				const auto fSize = float(Ground::size) * 1.5;
 
 				Ground::gd.windData[x][y] = glm::vec2(
 						perlinX.octave2D_11(fx / fSize + timeOffset, fy / fSize + timeOffset, 1),
@@ -99,7 +99,7 @@ void Grass::draw() {
 	glUniform1i(layersLoc, layers);
 
 	GLint gridSize = glGetUniformLocation(Shader::grassShaderProgram, "gridSize");
-	glUniform1i(gridSize, size);
+	glUniform1i(gridSize, Ground::size);
 
 	GLint maxHeightLoc = glGetUniformLocation(Shader::grassShaderProgram, "maxHeight");
 	glUniform1f(maxHeightLoc, maxHeight);
@@ -108,11 +108,11 @@ void Grass::draw() {
 	glUniform3fv(points, (maxLayers + 1) * 2 - 1, glm::value_ptr(grassVertices[0]));
 
 	glBindVertexArray(grassVAO);
-	glDrawArrays(GL_POINTS, 0, (size + 1) * (size + 1));
+	glDrawArrays(GL_POINTS, 0, (Ground::size + 1) * (Ground::size + 1));
 }
 
 void Grass::update(float delta) {
-	if (!windFrozen) timeOffset += delta / 10000;
+	if (!windFrozen) timeOffset += delta / 10000.0f;
 	Grass::windData();
 
 	glBindBuffer(GL_ARRAY_BUFFER, grassVBO);

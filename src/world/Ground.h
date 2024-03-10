@@ -7,14 +7,15 @@
 #include "glm/vec2.hpp"
 #include <vector>
 
-extern int size;
 struct GroundData {
-	glm::vec3 **groundVertices;
-	glm::vec3 **groundNormals;
-	glm::vec2 **windData;
+	glm::vec3** groundVertices;
+	glm::vec3** groundNormals;
+	glm::vec2** windData;
 };
 
 namespace Ground {
+	extern int size;
+
 	void groundInit();
 	void assignInputs();
 	void draw();
@@ -28,7 +29,7 @@ namespace Ground {
 	extern glm::vec3* verticesData;
 	extern glm::vec3* normalsData;
 	extern glm::vec2* windData;
-	
+
 	static GLuint* groundIndices;
 	static unsigned int groundVBO, groundVAO, groundEBO;
 }

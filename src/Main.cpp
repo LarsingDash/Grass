@@ -21,6 +21,7 @@
 //Z/X		- Inc/Decrease grass LOD
 //F			- Freeze wind
 //R			- Disable wind
+//-/=		- Inc/Decrease size
 
 //Main
 namespace Main {

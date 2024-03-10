@@ -6,8 +6,8 @@
 #include "glm/glm.hpp"
 #include <iostream>
 
-int size = 100;
 namespace Ground {
+	int size = 100;
 
 	GroundData gd;
 	int verticesSize;
@@ -26,6 +26,10 @@ bool isHeightEnabled = true;
 
 void Ground::groundInit() {
 	// Initialize pointers array
+	verticesData = new glm::vec3[(size + 1) * (size + 1)];
+	normalsData = new glm::vec3[(size + 1) * (size + 1)];
+	windData = new glm::vec2[(size + 1) * (size + 1)];
+
 	auto** vertices = new glm::vec3* [size + 1];
 	auto** normals = new glm::vec3* [size + 1];
 	auto** wind = new glm::vec2* [size + 1];
@@ -160,13 +164,13 @@ void Ground::assignInputs() {
 		std::cout << "Heightmap: " << isHeightEnabled << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_MINUS, []() {
-		size -= 10;
+		size = glm::max(15, size - 10);
 		groundInit();
 		Grass::grassInit();
 		std::cout << "Size: " << size << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_EQUAL, []() {
-		size += 10;
+		size = glm::min(500, size + 10);
 		groundInit();
 		Grass::grassInit();
 		std::cout << "Size: " << size << std::endl;
