@@ -88,6 +88,8 @@ void Grass::windData() {
 			} else Ground::gd.windData[x][y] = glm::vec2(0);
 		}
 	}
+
+	Ground::gd.windData[Ground::size][Ground::size] = glm::vec2(-1, -1);
 }
 
 void Grass::draw() {
@@ -109,7 +111,7 @@ void Grass::draw() {
 	glUniform3fv(points, (maxLayers + 1) * 2 - 1, glm::value_ptr(grassVertices[0]));
 
 	glBindVertexArray(grassVAO);
-	glDrawArrays(GL_POINTS, 0, (Ground::size + 1) * (Ground::size + 1));
+	glDrawArrays(GL_POINTS, 0, (Ground::size + 1) * (Ground::size + 1) - 1); //minus bozo
 }
 
 void Grass::update(float delta) {
