@@ -39,7 +39,7 @@ void Grass::grassInit() {
 					Ground::windData);
 
 	//Binding pointers
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr); // Assuming vertices are at offset 0
+	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec3), nullptr);
 	glEnableVertexAttribArray(2);
 
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(glm::vec2),

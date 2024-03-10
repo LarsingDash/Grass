@@ -20,8 +20,8 @@ namespace Ground {
 	void assignInputs();
 	void draw();
 	void spawn();
+	int _decideStep(bool down);
 	void groundDestroy();
-
 	extern GroundData gd;
 	extern int verticesSize;
 	extern int normalsSize;

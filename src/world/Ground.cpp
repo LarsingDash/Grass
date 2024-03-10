@@ -7,7 +7,7 @@
 #include <iostream>
 
 namespace Ground {
-	int size = 100;
+	int size = 15;
 
 	GroundData gd;
 	int verticesSize;
@@ -164,17 +164,23 @@ void Ground::assignInputs() {
 		std::cout << "Heightmap: " << isHeightEnabled << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_MINUS, []() {
-		size = glm::max(15, size - 10);
+		size = glm::max(1, size - _decideStep(true));
 		groundInit();
 		Grass::grassInit();
 		std::cout << "Size: " << size << std::endl;
 	});
 	Input::assignInput(GLFW_KEY_EQUAL, []() {
-		size = glm::min(500, size + 10);
+		size = glm::min(500, size + _decideStep(false));
 		groundInit();
 		Grass::grassInit();
 		std::cout << "Size: " << size << std::endl;
 	});
+}
+
+int Ground::_decideStep(bool down) {
+	if (size < 10 || (size == 10 && down)) return 1;
+	else if (size < 50 || (size == 50 && down)) return 5;
+	else return 10;
 }
 
 void Ground::groundDestroy() {

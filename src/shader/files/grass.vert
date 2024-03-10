@@ -11,8 +11,6 @@ out mat4 matrices;
 out vec2 wind;
 out int size;
 
-const vec3 zero = vec3(0);
-
 void main() {
     matrices = grassProj * grassView;
     wind = windData;
