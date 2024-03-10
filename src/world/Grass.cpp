@@ -11,6 +11,7 @@ bool grassEnabled = true;
 bool polyEnabled = false;
 bool windFrozen = false;
 bool windActive = true;
+float windSize = 0.5f;
 
 float timeOffset = 0.0f;
 
@@ -78,7 +79,7 @@ void Grass::windData() {
 				const auto fx = float(x);
 				const auto fy = float(y);
 
-				const auto fSize = float(Ground::size) * 1.5;
+				const auto fSize = float(Ground::size) * windSize;
 
 				Ground::gd.windData[x][y] = glm::vec2(
 						perlinX.octave2D_11(fx / fSize + timeOffset, fy / fSize + timeOffset, 1),
@@ -153,6 +154,14 @@ void Grass::assignInputs() {
 	Input::assignInput(GLFW_KEY_R, []() {
 		windActive = !windActive;
 		std::cout << "WindActive: " << windActive << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_COMMA, []() {
+		windSize = glm::max(0.00f, windSize - 0.02f);
+		std::cout << "WindSize: " << windSize << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_PERIOD, []() {
+		windSize = glm::min(1.5f, windSize + 0.02f);
+		std::cout << "WindSize: " << windSize << std::endl;
 	});
 }
 

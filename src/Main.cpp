@@ -22,6 +22,7 @@
 //F			- Freeze wind
 //R			- Disable wind
 //-/=		- Inc/Decrease size
+//,/.		- Inc/Decrease windMap size
 
 //Main
 namespace Main {
