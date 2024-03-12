@@ -7,7 +7,7 @@
 #include <iostream>
 
 namespace Ground {
-	int size = 50;
+	int size = 250;
 
 	GroundData gd;
 	int verticesSize;

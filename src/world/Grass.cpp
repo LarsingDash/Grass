@@ -11,7 +11,8 @@ bool grassEnabled = true;
 bool polyEnabled = false;
 bool windFrozen = false;
 bool windActive = true;
-float windSize = 0.5f;
+float windSize = 0.2f;
+bool useRandomOffset = true;
 
 float timeOffset = 0.0f;
 
@@ -107,6 +108,9 @@ void Grass::draw() {
 	GLint maxHeightLoc = glGetUniformLocation(Shader::grassShaderProgram, "maxHeight");
 	glUniform1f(maxHeightLoc, maxHeight);
 
+	GLint useRandomOffsetLoc = glGetUniformLocation(Shader::grassShaderProgram, "useRandomOffset");
+	glUniform1i(useRandomOffsetLoc, useRandomOffset);
+
 	GLint points = glGetUniformLocation(Shader::grassShaderProgram, "pointsRaw");
 	glUniform3fv(points, (maxLayers + 1) * 2 - 1, glm::value_ptr(grassVertices[0]));
 
@@ -164,6 +168,10 @@ void Grass::assignInputs() {
 	Input::assignInput(GLFW_KEY_PERIOD, []() {
 		windSize = glm::min(1.5f, windSize + 0.02f);
 		std::cout << "WindSize: " << windSize << std::endl;
+	});
+	Input::assignInput(GLFW_KEY_O, []() {
+		useRandomOffset = !useRandomOffset;
+		std::cout << "UseRandomOffset: " << useRandomOffset << std::endl;
 	});
 }
 

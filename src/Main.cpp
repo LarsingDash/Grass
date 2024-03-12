@@ -23,6 +23,7 @@
 //R			- Disable wind
 //-/=		- Inc/Decrease size
 //,/.		- Inc/Decrease windMap size
+//O		- Random Grass Offset
 
 //Main
 namespace Main {

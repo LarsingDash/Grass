@@ -18,14 +18,26 @@ uniform int layers;
 uniform vec3[(MAX_LAYERS + 1) * 2 - 1] pointsRaw;
 vec4[(MAX_LAYERS + 1) * 2 - 1] points;
 
+uniform int useRandomOffset;
+
 out vec3 fragNormal;
 
+float rand(vec2 co) {
+    return fract(sin(dot(co, vec2(12.9898, 78.233))) * 43758.5453);
+}
+
 void main() {
+    vec4 origin = gl_in[0].gl_Position;
+    vec2, raw2D = vec2(origin.x, origin.z);
+    if (useRandomOffset == 1) origin += vec4((rand(raw2D) - 0.5) / size[0], 0, (rand(raw2D) - 0.5) / size[0], 0);
+
     //Precalculate all points
     for (int i = 0; i < (MAX_LAYERS + 1) * 2 - 1; i++) {
         vec3 raw = pointsRaw[i];
         float factor = pow(raw.y / maxHeight, 2.5) / (size[0] / 10.0);
-        points[i] = vec4(raw.x + wind[0].x * factor, raw.y / (size[0] / 15.0), raw.z + wind[0].y * factor, 1) + gl_in[0].gl_Position;
+
+        points[i] = vec4(raw.x + wind[0].x * factor, raw.y / (size[0] / 250.0), raw.z + wind[0].y * factor, 1);
+        points[i] += origin;
     }
 
     //Loop through for emitting vertices and normals
