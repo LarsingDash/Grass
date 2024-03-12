@@ -1,11 +1,12 @@
 ﻿#include "shader/Shader.h"
 #include "Camera.h"
+#include "world/Ground.h"
 
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-glm::vec3 eye = glm::vec3(0.0f, 0.5f, 2.0f);
-glm::vec3 center = glm::vec3(0.0f, 0.25f, 1.0f);
+glm::vec3 eye = glm::vec3(0.0f, 0.25f, 1.25f);
+glm::vec3 center = glm::vec3(0.0f, -0.25f, 0.25f);
 
 constexpr float baseSpeed = 500.f; //Increase in number = decrease in speed
 glm::vec3 up = glm::vec3(0.0f, 1.0f, 0.0f);
@@ -23,7 +24,8 @@ void Camera::cameraInit(GLFWwindow* window) {
 }
 
 void Camera::updateCamera(float delta) {
-	float movementSpeed = delta / baseSpeed;
+	float rotationSpeed = (delta / baseSpeed);
+	float movementSpeed = rotationSpeed / (float(Ground::size) / 25.0f);
 	
 	//Movement
 	if (glfwGetKey(windowC, GLFW_KEY_W) == GLFW_PRESS) {
@@ -55,21 +57,21 @@ void Camera::updateCamera(float delta) {
 
 	//Rotation
 	if (glfwGetKey(windowC, GLFW_KEY_LEFT) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, up, glm::radians(40.0f * movementSpeed)) + eye;
+		center = rotateAroundAxis(center - eye, up, glm::radians(40.0f * rotationSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 		right = glm::normalize(glm::cross(forward, up));
 	}
 	if (glfwGetKey(windowC, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, up, glm::radians(-40.0f * movementSpeed)) + eye;
+		center = rotateAroundAxis(center - eye, up, glm::radians(-40.0f * rotationSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 		right = glm::normalize(glm::cross(forward, up));
 	}
 	if (glfwGetKey(windowC, GLFW_KEY_UP) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, right, glm::radians(40.0f * movementSpeed)) + eye;
+		center = rotateAroundAxis(center - eye, right, glm::radians(40.0f * rotationSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 	}
 	if (glfwGetKey(windowC, GLFW_KEY_DOWN) == GLFW_PRESS) {
-		center = rotateAroundAxis(center - eye, right, glm::radians(-40.0f * movementSpeed)) + eye;
+		center = rotateAroundAxis(center - eye, right, glm::radians(-40.0f * rotationSpeed)) + eye;
 		forward = glm::normalize(center - eye);
 	}
 }
